@@ -1,0 +1,342 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Title: Hierarchical
+%%BoundingBox:-1200 -1200 1200 1200
+%%EndComments
+
+gsave
+
+	300 400 translate
+	.25 .25 scale
+	/Garamond findfont
+	/fontsize 15 def
+	fontsize scalefont
+	setfont
+	
+	0 setlinewidth
+	
+	/node { % (label) x y node
+	    gsave
+	    /oldfontsize fontsize def
+	    3 2 roll
+	    1 add dup fontsize mul /fontsize exch def
+	    currentfont exch scalefont setfont % undone by grestore, and I should really not even have the fontsize variable
+	    exch
+	    atan
+	    dup
+	    rotate
+	    radius 10 add 0 translate
+	    0 0 moveto
+	    dup 90 gt exch 270 lt and {180 rotate dup 0 exch stringwidth pop sub 0 rmoveto} if
+	    0 fontsize 3 div neg rmoveto
+	    4 1 roll
+		setrgbcolor
+	    show
+	    /fontsize oldfontsize def
+	    grestore
+	} def
+	
+	/flatten {
+	    {} forall
+	} def
+	
+	/array-node {
+	    flatten node
+	} def
+	
+	/divider { % angle divider
+	    gsave
+	    rotate
+	    3 setlinewidth
+	    radius 150 add 0 moveto
+	    radius 200 add 0 lineto
+	    stroke
+	    grestore
+	} def
+	
+	
+	/colors [
+	    [228 26 28]
+	    [55 126 184]
+	    [77 175 74]
+	    [152 78 163]
+	    [255 127 0]
+	    [255 255 51]
+	    [166 86 40]
+	    [241 140 210]
+	    [0 28 168]
+	    [174 165 0]
+	    [68 217 177]
+	    [255 222 98]
+	    [164 0 70]
+	    [139 155 147]
+	] def
+	
+	
+	/level {
+	    gsave
+	    5 setlinewidth
+	    1 add 20 mul radius add 200 add /levelradius exch def
+	    /dividers exch def
+	    dividers length 1 sub dividers exch get /previous exch def % trick to make colors go all the way around
+	    0 1 dividers length 1 sub {
+	        dup colors length mod colors exch get {255 div} forall setrgbcolor
+	        levelradius previous cos mul levelradius previous sin mul moveto
+	        dividers exch get dup 0 0 levelradius previous 4 index arc
+	        dup dup levelradius 20 sub exch cos mul exch levelradius 20 sub exch sin mul lineto
+	        stroke
+	        /previous exch def
+	    } for
+	    
+	    grestore
+	} def
+	
+	/edge {
+	    gsave
+	    5 mul 1 add setlinewidth
+	    dup length 8 lt {.95} {.7} ifelse setgray
+	    b
+	    grestore
+	} def
+	
+	/twodup {
+	    1 index 1 index
+	} def
+	
+	
+	/beziercatmull {
+	    /y3 exch def
+	    /x3 exch def
+	    /y2 exch def
+	    /x2 exch def
+	    /y1 exch def
+	    /x1 exch def
+	    /y0 exch def
+	    /x0 exch def
+	
+	    0 1 6 div sub x0 mul
+	    x1 add
+	    1 6 div x2 mul add
+	
+	    0 1 6 div sub y0 mul
+	    y1 add
+	    1 6 div y2 mul add
+	
+	    1 6 div x1 mul
+	    x2 add
+	    0 1 6 div sub x3 mul add
+	
+	    1 6 div y1 mul
+	    y2 add
+	    0 1 6 div sub y3 mul add
+	
+	    x2
+	
+	    y2
+	
+	    curveto
+	    
+	} def
+	
+	/catmull {
+	    /points exch def
+	    newpath
+	    points 0 get points 1 get
+	    1 index 1 index moveto
+	    0 1 5 {
+	        points exch get
+	    } for
+	    beziercatmull
+	
+	    0 2 points length 8 sub {
+	        8 {
+	            dup 1 add exch
+	            points exch get
+	            exch
+	        } repeat
+	        pop
+	        beziercatmull
+	    } for
+	
+	    
+	    points length 6 sub 1 points length 1 sub {
+	        points exch get
+	    } for
+	    points points length 2 sub get points points length 1 sub get
+	    beziercatmull
+	
+	    stroke
+	} def
+	
+	/bezierb {
+	    /y3 exch def
+	    /x3 exch def
+	    /y2 exch def
+	    /x2 exch def
+	    /y1 exch def
+	    /x1 exch def
+	    /y0 exch def
+	    /x0 exch def
+	
+	    1 6 div x0 mul
+	    2 3 div x1 mul add
+	    1 6 div x2 mul add
+	
+	    1 6 div y0 mul
+	    2 3 div y1 mul add
+	    1 6 div y2 mul add
+	
+	    moveto
+	
+	    2 3 div x1 mul
+	    1 3 div x2 mul add
+	    
+	    2 3 div y1 mul
+	    1 3 div y2 mul add
+	
+	    1 3 div x1 mul
+	    2 3 div x2 mul add
+	
+	    1 3 div y1 mul
+	    2 3 div y2 mul add
+	
+	    1 6 div x1 mul
+	    2 3 div x2 mul add
+	    1 6 div x3 mul add
+	
+	    1 6 div y1 mul
+	    2 3 div y2 mul add
+	    1 6 div y3 mul add
+	
+	    curveto
+	    
+	} def
+	
+	/b {
+	    gsave
+	    /points exch def
+	    
+	    points length 4 eq { % if only four members, duplicate the first
+	        /points [
+	            points 0 get
+	            points 1 get
+	            points {} forall
+	        ] def
+	    } if
+	    
+	    newpath
+	    3 {
+	        points 0 get
+	        points 1 get
+	    } repeat
+	    points 2 get
+	    points 3 get
+	    bezierb
+	
+	    points 0 get
+	    points 1 get
+	    0 1 5 {
+	        points exch get
+	    } for
+	    bezierb
+	
+	    0 2 points length 8 sub {
+	        8 {
+	            dup 1 add exch
+	            points exch get
+	            exch
+	        } repeat
+	        pop
+	        bezierb
+	    } for
+	
+	    points length 6 sub 1 points length 1 sub {
+	        points exch get
+	    } for
+	    points points length 2 sub get points points length 1 sub get
+	    bezierb
+	
+	    points length 4 sub 1 points length 1 sub {
+	        points exch get
+	    } for
+	    points points length 2 sub get points points length 1 sub get
+	    points points length 2 sub get points points length 1 sub get
+	    bezierb
+	    
+	    <<
+	        /ShadingType 2
+	        /ColorSpace /DeviceRGB
+	        /Coords [-1000 -1000 1000 1000]
+	        /BBox [-1000 -1000 1000 1000]
+	        /Function
+	            <<
+	                /FunctionType 2
+	                /Domain [0 1]
+	                /c0 [1 0 0]
+	                /c1 [0 1 0]
+	                /N 1
+	            >>
+	    >>
+	    gsave
+	    currentlinewidth 1 add setlinewidth
+	    1 setgray
+	    stroke
+	    grestore
+	    stroke
+	    grestore
+	} def
+	
+	
+	
+	
+	
+
+
+% Pops two numbers
+% Pushes the lesser of them
+/2min { 2 copy ge { exch } if pop } bind def
+
+% Pops two numbers
+% Pushes the greater of them
+/2max { 2 copy le { exch } if pop } bind def
+
+% Pops n, the number of values to pop for averaging, and n values
+% Pushes the mean of those n values
+/mean {
+	% Basically, fold + from 0 on the n values.
+	% The final exch div divides the sum by n,
+	% which we've kept rolled at the bottom of the stack.
+	0 1 index {3 -1 roll add} repeat exch div
+} def
+
+/radius 800.0 def
+0.796078431372549 0.796078431372549 0.796078431372549 (Dementia Or Alzheimer’s Disease) 0.0 -625.4651859744237 -498.79184148698704 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Assesment/measurement) 0.0 625.4651859744239 498.7918414869868 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Other) 0.0 -347.10699129404645 720.7750943219353 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Basic Research) 0.0 -779.9423297454589 -178.0167471650514 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Other) 0.0 -625.4651859744238 498.79184148698687 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Amputations Or Limb Loss) 0.0 779.9423297454589 178.01674716505153 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Translational Research) 0.0 347.10699129404657 720.7750943219353 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Mental Illness) 0.0 -347.1069912940466 -720.7750943219353 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Arthritis And Rheumatic Diseases) 0.0 -779.9423297454589 178.0167471650516 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Intervention-preventive, Restorative, Compensatory) 0.0 347.10699129404634 -720.7750943219354 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Work-related Injuries) 0.0 779.9423297454588 -178.01674716505173 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Hand Or Upper Extremity Injuries) 0.0 -1.4695761589768238E-13 -800.0 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Musculoskeletal Injuries) 0.0 625.4651859744238 -498.791841486987 node
+0.796078431372549 0.796078431372549 0.796078431372549 (Health Services) 0.0 4.898587196589413E-14 800.0 node
+[ -779.9423297454589 178.0167471650516 -465.27624280709045 -130.16512173526738 -779.9423297454589 -178.01674716505144  ] 1.0 edge
+[ 779.9423297454588 -178.01674716505173 327.9281056875582 -346.89842492628236 347.10699129404634 -720.7750943219354  ] 0.6609640474436812 edge
+[ -1.4695761589768238E-13 -800.0 230.43531446937578 -424.64633153065085 347.10699129404634 -720.7750943219354  ] 0.6609640474436812 edge
+[ 625.4651859744238 -498.791841486987 308.6184627161788 -386.99531171652427 347.10699129404634 -720.7750943219354  ] 0.6609640474436812 edge
+[ -625.4651859744237 -498.79184148698704 -445.96659983571107 -214.7661953167722 -779.9423297454589 -178.0167471650514  ] 0.5000000000000001 edge
+[ 779.9423297454589 178.01674716505153 410.2253842053943 271.6480141391248 625.4651859744239 498.7918414869868  ] 0.5000000000000001 edge
+[ -347.10699129404645 720.7750943219353 -251.73664389382617 422.736527346841 -625.4651859744238 498.79184148698687  ] 0.2924812503605782 edge
+[ 779.9423297454589 178.01674716505153 375.4306098703471 299.3959207434934 347.10699129404657 720.7750943219353  ] 0.2924812503605782 edge
+[ -347.1069912940466 -720.7750943219353 -411.1718255006639 -242.51410192114074 -779.9423297454589 -178.0167471650514  ] 0.0 edge
+[ -347.10699129404645 720.7750943219353 -173.5534956470232 460.38754716096764 5.09502586896226E-14 800.0  ] 0.0 edge
+[ -347.10699129404645 720.7750943219353 -253.01148109639672 375.585113827294 -429.2066312694727 -99.7699884026147 -779.9423297454589 -178.01674716505144  ] 0.7924812503605781 edge
+[ 779.9423297454589 178.01674716505153 407.893260254203 186.6115352745336 151.70204859122347 -45.3749973574358 130.06028166865283 -90.31458943178514 295.46545530370224 -369.80362624654344 347.10699129404634 -720.7750943219355  ] 0.2924812503605782 edge
+[ -625.4651859744237 -498.79184148698704 -364.1104382668893 -204.98389795831548 -31.273259298721158 -24.939592074349378 31.27325929872123 24.939592074349335 328.36922263657254 261.86571678066804 625.4651859744239 498.7918414869868  ] 0.0 edge
+[ 77.14285714285714 154.28571428571428 257.1428571428571 0.0 ] 0 level
+[ 77.14285714285714 257.1428571428571 0.0 ] 1 level
+grestore
+
