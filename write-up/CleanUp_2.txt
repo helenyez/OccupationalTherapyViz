@@ -1,0 +1,70 @@
+Clean up based on the user's response:
+- deleted any projects with identical information:
+o	313 and 314, 
+o	82 and 92 
+o	24 and 99
+o	80 and 90
+o	76 and 88
+o	78 and 86
+o	75 and 89
+o	79 and 85
+o	77 and 87
+o	81 and 91
+
+- assigned ProjectID 9999 to Project ID 1
+- reassigned Ellen S Cohn projects to Helen S Cohen
+- Updated blank USR_FUNDING_DATE_END with the current date
+
+- Data was sliced by the USR_FUNDING_DATE_START 1982 through 2017 by seven years cumulatively
+Number of project was proportionally (times 3) increasing from 18 to 54 to 149 to 406 to 755 in 2016
+
+Network Analysis Toolkit (NAT) was selected.
+This graph claims to be directed.
+
+Nodes: 18
+Isolated nodes: 0
+Node attributes present: label, countProjectsperResearcher, bipartiteType
+
+Edges: 16
+No self loops were discovered.
+No parallel edges were discovered.
+
+Edge attributes:
+	Did not detect any nonnumeric attributes.
+	Numeric attributes:
+				min	max	mean
+		countPr...	1	2	1.125
+
+	This network seems to be valued.
+
+Average total degree: 1.7778
+Average in degree: 0.8889
+Average out degree: 0.8889
+This graph is not weakly connected.
+There are 3 weakly connected components. (0 isolates)
+The largest connected component consists of 9 nodes.
+This graph is not strongly connected.
+There are 18 strongly connected components.
+The largest strongly connected component consists of 1 nodes.
+
+
+Density (disregarding weights): 0.0523
+Additional Densities by Numeric Attribute
+
+- two models created:
+based on Network with directed edges from USR_PRINCIPAL_INVESTIGATOR to USR_DIAGNOSIS_AREA.2 visualized using 
+1)GUESS GEM
+2)GEPHI: Fruchterman Reigold
+- node color by multimode
+-label for Researcher sized by out-degree (number of Diagnosis per researcher)
+- node  sized by degree (number of projects per Diagnosis)
+- edges colored by numberProjects perDiagnosisperInvestigator
+Preview:default curved
+
+Final:
+Node sized by out-degree 12 to 40
+Node color by bipartitetype  
+Node label sized by in-degree 1 to 2 (number of reseach projects per diagnosis)
+edge color by weight 
+Top 3 PIs depicted in blue
+
